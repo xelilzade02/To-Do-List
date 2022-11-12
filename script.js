@@ -82,7 +82,7 @@ function addButtom() {
         lists.style.borderRadius = '10px 10px 0 0';
         inputActive = true;
     } else if (listInput.value == '') {
-        alert("Input can't empty");
+        addList()
     } else {
         addList();
     }
@@ -146,6 +146,48 @@ function orderDesc(e) {
     ascIcon.style.display = 'block';
 }
 
+const dragAndDrop = () => {
+    let dragStartIndex, dragEndIndex;
+    const lists = document.querySelector('.lists')
+    const list = document.querySelectorAll('.list');
+    list.forEach((item) => {
+        item.addEventListener('mouseover', (e) => {
+            e.target.style.cursor = 'pointer';
+        });
+        item.addEventListener('mouseout', (e) => {
+            e.target.style.cursor = null;
+        });
+        item.addEventListener('dragstart', dragStart);
+        item.addEventListener('dragover', dragOver);
+        item.addEventListener('drop', dragDrop);
+        item.addEventListener('dragenter', dragEnter);
+        item.addEventListener('dragleave', dragLeave);
+    });
+
+    function dragStart(e) {
+        dragStartIndex = +e.target.getAttribute('data-index');
+    }
+
+    function dragEnter(e) {
+        e.target.classList.add('over');
+    }
+
+    function dragLeave(e) {
+        e.target.classList.remove('over');
+    }
+
+    function dragOver(e) {
+        e.preventDefault();
+    }
+
+    function dragDrop(e) {
+        dragEndIndex = +e.target.getAttribute('data-index');
+        swapItems(dragStartIndex, dragEndIndex);
+        e.target.classList.remove('over');
+        e.target.style.border = null;
+        e.target.style.borderRadius = null;
+    }
+
     function swapItems(fromIndex, toIndex) {
         const listDiv = document.querySelectorAll('.list');
         let dragItemOne, dragItemTwo, dragItemOneIndex, dragItemTwoIndex;
@@ -167,3 +209,4 @@ function orderDesc(e) {
             lists.insertBefore(dragItemOne, dragItemTwo.nextSibling);
         }
     }
+}
